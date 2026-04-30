@@ -1,0 +1,8 @@
+version: '3.0'
+
+services:
+  simple-reply-bot:
+    container_name: simple-reply-bot
+    build: .
+    volumes:
+      - "./blacklist.json:/app/blacklist.json:rw"
