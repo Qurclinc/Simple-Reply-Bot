@@ -1,18 +1,20 @@
+from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram import Router, F, types
 from aiogram.filters import Command
 
-from filters import IsBlocked, IsAdmin
-from config import settings, bot
-from keyboards.admin import reply_keyboard
+from bot.filters import IsBlocked, IsAdmin
+from core.config import settings
+from core.extenstion import bot
+from bot.keyboards.admin import reply_keyboard
 
 router = Router()
 
 @router.message(Command("start"))
 async def start(message: types.Message):
-    await message.answer(settings.GREETINGS_TEXT)
+    await message.answer(settings.GREETINGS_TEXT, reply_markup=types.ReplyKeyboardRemove())
     
 @router.message(F.text, ~IsBlocked(), ~IsAdmin())
-async def send_message(message: types.Message):
+async def send_message(message: types.Message, session: AsyncSession):
     try:
         username = message.from_user.username
         if username:
@@ -25,10 +27,6 @@ async def send_message(message: types.Message):
             reply_markup=await reply_keyboard(int(message.from_user.id))
         )
         
-        await message.answer("Сообщение отправлено!")
+        await message.reply("Сообщение отправлено!")
     except Exception:
-        await message.answer("Не удалось отправить сообщение")
-        
-@router.message(F.text, IsBlocked(), ~IsAdmin())
-async def notify_banned(message: types.Message):
-    await message.answer("Вас заблокировали в боте.")
+        await message.reply("Не удалось отправить сообщение")

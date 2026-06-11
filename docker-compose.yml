@@ -1,8 +1,8 @@
-version: '3.0'
+version: '3.3'
 
 services:
-  simple-reply-bot:
+  tgbot:
     container_name: simple-reply-bot
     build: .
     volumes:
-      - "./blacklist.json:/app/blacklist.json:rw"
+      - ./blacklist.db:/app/database.db:rw

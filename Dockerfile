@@ -8,4 +8,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "main.py" ]
+RUN chmod 755 /app/start.sh
+
+ENTRYPOINT [ "./start.sh" ]
